@@ -10,25 +10,35 @@ Sophia Wang, Susan Fung, Guanchen Zhang
 
 This is the repository for the Python version of the `ssg_pymeans` package. The R version is available [here](https://github.com/UBC-MDS/ssg_kmeansr).
 
-This package implements the classical unsupervised clustering method, [k-means](https://en.wikipedia.org/wiki/K-means_clustering).
+This package implements the classical unsupervised clustering method, [k-means](https://en.wikipedia.org/wiki/K-means_clustering), with options for choosing the initial centroids (e.g. random and kmeans++). Users will be able to find clusters in their data, label new data, and observe the clustering results.
+
+Depending on the progress and time constraint, we also plan to cover some other clustering methods in this package. See details in the section below.
 
 ## Functions
 
-The package provides the following functions:
+The package will be implemented in an OOP fashion with the following class functions:
 
-- basic k-means: initial points are picked randomly.
-- k-means ++: initial points are picked based on distance. k-means++ is explained [here](https://en.wikipedia.org/wiki/K-means%2B%2B).
-- plotting: the package will provide plotting functions to visualize the results and performance.
+- initial points selection:
+  -  basic k-means: initial centroids are picked randomly.
+  -  k-means++: initial centroids are picked based on distance. More details can be found [here](https://en.wikipedia.org/wiki/K-means%2B%2B).
+- clustering: build clusters and save cluster attributes
+- prediction: predict the label of new data based on the cluster attributes
+- plotting: the package will provide plotting functions to visualize the results and performance
+
+Outputs related to performance will be denoted by class attributes, e.g. within cluster sum of squared distance.
+
+The package will include one or two common datasets for testing and demonstration.
 
 Some miscellenous functions include:
 
-- input validation
+- input validation: check for input validity, e.g. whether the dimensions of X match with the label vector (if provided by user).
 - input scaling: scale/normalize the input data if necessary
 
-Optinal functions depending on progress:
+Optional functions depending on the progress:
 
 - EM clustering
 - Multi-dimensional scaling
+- Transductive/inductive SSL
 
 ## Ecosystem
 

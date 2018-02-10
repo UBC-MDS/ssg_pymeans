@@ -2,7 +2,7 @@
 
 ### Summary
 
-This code of conduct demonstrates expectations for participation in ssg_pymeans open source and how to report unacceptable behaviours. We are aiming to provide a welcoming and encouraging experience for all parties. People violating this code of conduct may be excluded from the open source practice. 
+This code of conduct demonstrates expectations for participation in ssg_kmeansr open source and how to report unacceptable behaviours. We are aiming to provide a welcoming and encouraging experience for all parties. People violating this Code of Conduct may be excluded from the open source practice. 
 
 ### What we encourage 
 
@@ -14,7 +14,7 @@ We are committed to making the environment throughout this open source kind, inc
 ### Unacceptable behaviours
 
 
-All unprofessional and offensive behaviours are not expected, which include, but not limited to, offensive comments on other people's gender, age, race, religion, sexual orientation, personal appearance and other personal traits, insults, as well as using sexual languages or images.
+All unprofessional and offensive behaviours are not accepted, which include, but not limited to, offensive comments on other people's gender, age, race, religion, sexual orientation, personal appearance and other personal traits, insults, as well as using sexual languages or images.
 
 ### How to report unacceptable behaviours and what we can do 
 
@@ -25,13 +25,13 @@ As the administrators and maintainers of this open source, we have the right and
 
 ### License
 
-To the extent possible under law, the `ssg_pymeans` team has waived all copyright and related or neighboring rights to `ssg_pymeans` Code of Conduct.
+To the extent possible under law, the `ssg_kmeansr` team has waived all copyright and related or neighboring rights to `ssg_kmeansr` Code of Conduct.
 
 
 
 ### Attribute
 
-This code of conduct is based on the template established by the thoughtbot team [Code of Conduct by thoughtbot](https://thoughtbot.com/open-source-code-of-conduct) and tidytext group [Code of Conduct by tidytext](https://github.ubc.ca/ubc-mds-2017/DSCI_524_lab1_sophia28/blob/master/lab1.ipynb). 
+This Code of Conduct is based on the template established by the Thoughtbot team [Code of Conduct by Thoughtbot](https://thoughtbot.com/open-source-code-of-conduct) and Contributor Covenant group [Code of Conduct by Contributor Covenant](https://www.contributor-covenant.org/). 
 
 
 

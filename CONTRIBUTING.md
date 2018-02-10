@@ -3,15 +3,15 @@
 We welcome bug reports, bug fixes, ideas for new features from everyone, subject to [Code of Conduct] (CONDUCT.md) and Contributor License Agreement below.
 
 ## Contributor License Agreement
-By contributing, you grant the project owners, and those who may fork the code, a perpetual, world-wide, non-exclusive, royalty-free, irrevocable license to reproduce, prepare derivative works of, distribute such derivative works, and to sublicense the foregoing rights to third parties.
+By contributing, you grant the project administrators, and those who may fork the code, a perpetual, world-wide, non-exclusive, royalty-free, irrevocable license to reproduce, prepare derivative works of, distribute such derivative works, and to sublicense the foregoing rights to third parties.
 (Adapt from [MCLA](https://opensource.microsoft.com/pdf/microsoft-contribution-license-agreement.pdf))
 
 ## Contribute Code
 We use the following git flow:
 1.	Fork the ssg_pymeans repository to your GitHub repository
-2.	Clone your fork of ssg_pymeans to your local machine.
+2.	Clone your fork of ssg_pymeans to your local machine
 3.	After you commit your changes, push to your fork
-4.	Submit a pull request, and tag the project administrators as assignees.
+4.	Submit a pull request, and tag the project administrators as assignees
 
 ## Report Issues
 You can create an [issue](https://github.com/UBC-MDS/ssg_pymeans/issues). Make sure you include the following information:

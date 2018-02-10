@@ -11,7 +11,7 @@ We use the following git flow:
 1.	Fork the ssg_pymeans repository to your GitHub repository
 2.	Clone your fork of ssg_pymeans to your local machine.
 3.	After you commit your changes, push to your fork
-4.	Submit a pull request, and tag xiaosophiameng, susan-fung, guanchenz as assignees.
+4.	Submit a pull request, and tag the project administrators as assignees.
 
 ## Report Issues
 You can create an [issue](https://github.com/UBC-MDS/ssg_pymeans/issues). Make sure you include the following information:
@@ -22,4 +22,4 @@ You can create an [issue](https://github.com/UBC-MDS/ssg_pymeans/issues). Make s
 Have a great idea to enhance the project? Create an [issue](https://github.com/UBC-MDS/ssg_pymeans/issues) and let us know!
 
 ## Review
-We thank you for your time and interest. The project owners will review all pull requests before we merge. We will also review bug reports and new feature proposals, while we will try our best, we cannot promise we will implement all of them.
+We thank you for your time and interest. The project administrators will review all pull requests before we merge. We will also review bug reports and new feature proposals, while we will try our best, we cannot promise we will implement all of them.

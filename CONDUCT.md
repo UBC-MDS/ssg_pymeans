@@ -6,7 +6,7 @@ This code of conduct demonstrates expectations for participation in ssg_kmeansr 
 
 ### What we encourage 
 
-As contributors and administrators of this open source, we encourage all parties to contribute by, and not limited to, raising issues, initiating function requests, updating documentations and pulling requests. 
+As contributors and administrators of this open source, we encourage all parties to contribute by, and not limited to, raising issues, initiating feature requests, updating documentations, pulling requests and other proper behaviours subject to [Contributing to ssg_pymeans](https://github.com/UBC-MDS/ssg_pymeans/blob/master/CONTRIBUTING.md). 
 
 
 We are committed to making the environment throughout this open source kind, inclusive and harassment-free. We respect all parties involved regardless of gender, age, race, religion, sexual orientation, personal appearance and other personal traits.  

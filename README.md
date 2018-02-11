@@ -29,7 +29,7 @@ Outputs related to performance will be denoted by class attributes, e.g. within 
 
 The package will include one or two common datasets for testing and demonstration.
 
-Some miscellenous functions include:
+Some miscellaneous functions include:
 
 - input validation: check for input validity, e.g. whether the dimensions of X match with the label vector (if provided by user).
 - input scaling: scale/normalize the input data if necessary
@@ -46,4 +46,4 @@ Similar package:
 
 - [k-means in sklearn](http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html)
 
-`ssg_pymeans` is intended to help understand the fundamentals of k-means and variants. Contributors are encouraged to build advacned features on top of this base k-means package.
+`ssg_pymeans` is intended to help understand the fundamentals of k-means and variants. Contributors are encouraged to build advanced features on top of this base k-means package.

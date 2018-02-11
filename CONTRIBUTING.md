@@ -1,6 +1,6 @@
 # Contributing to ssg_pymeans
 
-We welcome bug reports, bug fixes, ideas for new features from everyone, subject to [Code of Conduct] (https://github.com/UBC-MDS/ssg_pymeans/blob/master/CONDUCT.md) and Contributor License Agreement below.
+We welcome bug reports, bug fixes, ideas for new features from everyone, subject to [Code of Conduct](https://github.com/UBC-MDS/ssg_pymeans/blob/master/CONDUCT.md) and Contributor License Agreement below.
 
 ## Contributor License Agreement
 By contributing, you grant the project administrators, and those who may fork the code, a perpetual, world-wide, non-exclusive, royalty-free, irrevocable license to reproduce, prepare derivative works of, distribute such derivative works, and to sublicense the foregoing rights to third parties.

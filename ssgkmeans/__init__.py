@@ -1,4 +1,1 @@
-
-def __init__:
-    """init"""
-    pass
+from .ssgpymeans import Pymeans

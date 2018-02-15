@@ -2,8 +2,9 @@
 ssg_pymeans
 ===========
 
-ssg_pymeans provides functions to implement k-means, a classical unsupervised
-clustering method. ssg_pymeans provides options for different initial centroid
+ssg_pymeans implements kmeans. It is not a wrapper around other kmeans packages.
+
+ssg_pymeans provides options for different initial centroid
 selections, including random and kmeans++. You might find the package useful
 if you try to understand the basics of kmeans or to build more advanced features
 on top this basic kmeans implementation. Typical usage often looks like this:

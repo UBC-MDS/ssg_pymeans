@@ -17,6 +17,11 @@ on top this basic kmeans implementation. Typical usage often looks like this:
     kmeans_job.kmeans()
     kmeans_job.kmplot()
 
+Home Page
+=========
+
+https://github.com/UBC-MDS/ssg_pymeans
+
 Dependencies
 ============
 

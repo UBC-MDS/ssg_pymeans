@@ -1,1 +1,1 @@
-from .ssg_pymeans import Pymeans
+from .ssg_pymeans import Pymeans, InvalidInput

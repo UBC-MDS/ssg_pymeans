@@ -51,7 +51,12 @@ class Pymeans:
         pass
 
     def predict(self):
-        pass
+        """Predict k-means clustering for new data frame
+        Returns:
+            dataframe: Contains
+                       1. new data
+                       2. clustering label for each data point
+            
 
     def input_shape_validation(self):
         """Utility function checking input data shape for kmplot.

@@ -1,1 +1,0 @@
-from .convertemp import fahr_to_kelvin

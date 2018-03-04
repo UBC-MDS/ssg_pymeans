@@ -21,7 +21,6 @@ class Pymeans:
         Args:
             k (int): Number of clusters.
             method (str): Name of the initialization method.
-
         Returns:
             list: k tuples of centroids
         """
@@ -42,6 +41,13 @@ class Pymeans:
             raise InvalidInput('Invalid initialization method.')
 
     def fit(self):
+        """Compute k-means clustering
+        Returns:
+            dictionary: Contains
+                        1. pandas data frame of the attributes and clustering for each data point
+                        2. total within cluster sum of square and
+                        3. pandas data frame of k centroids
+        """
         pass
 
     def predict(self):
@@ -88,4 +94,5 @@ class Pymeans:
             raise InvalidInput('No cluster labels. Run fit first before plot.')
 
         fig = plt.plot(self.data.iloc[:,0], self.data.iloc[:,1], '.')
+
         return fig

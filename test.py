@@ -28,15 +28,27 @@ class Test_init_cent:
 
 class Test_fit:
     @pytest.fixture
-    def pymeans(self):
-        return Pymeans()
+    def result(self):
+        pymeans = Pymeans()
+        return pymeans.fit()
 
-    def test_length(self, pymeans):
-        pymeans.fit()
-        pass
+    def test_type(self, result):
+        assert type(result) == "dictionary"
 
-    def test_value(self, pymeans):
-        pass
+    def test_length(self, result):
+        assert len(result) == 3
+
+    def test_clustering_type(self, result):
+        assert isinstance(result[clustering], pd.DataFrame)
+
+    def test_wss_type(self, result):
+        assert type(result[wss]) == "float"
+
+    def test_wss_positive(self, result):
+        assert result[wss] >= 0
+
+    def test_centriod_type(self, result):
+        assert isinstance(result[centroid], pd.DataFrame)
 
 class Test_predict:
     @pytest.fixture

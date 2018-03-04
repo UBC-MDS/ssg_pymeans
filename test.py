@@ -53,11 +53,22 @@ class Test_fit:
 class Test_predict:
     @pytest.fixture
     def pymeans(self):
-        return Pymeans()
+    test_data = pd.DataFrame({
+        'x1': pd.Series([1,2,3]),
+        'x2': pd.Series([4,5,6]),
+        'cluster': pd.Series([1,2,3])
+        })
+    return Pymeans(data=test_data)
 
-    def test_predict(self, pymeans):
-        pymeans.predict()
-        pass
+    def output(self):
+        pymeans = Pymeans()
+        return pymeans.predict()
+
+    def test_lenght(self, output):
+        assert len(pymeans.data.rows) == len(output[:,-1])
+
+    def test_output_type(self, output):
+        assert max(output[:,-1])<4
 
 class Test_kmplot:
     @pytest.fixture

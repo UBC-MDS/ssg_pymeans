@@ -17,6 +17,7 @@ class Pymeans:
 
     def init_cent(self, k=2, method='random'):
         """Centroids initialization using random or kmeans++ method.
+
         Args:
             k (int): Number of clusters.
             method (str): Name of the initialization method.
@@ -54,6 +55,7 @@ class Pymeans:
 
     def input_shape_validation(self):
         """Utility function checking input data shape for kmplot.
+
         Returns
             bool: True if shape is valid. False otherwise.
         """
@@ -66,6 +68,7 @@ class Pymeans:
 
     def input_label_validation(self):
         """Utility function checking if the cluster column exists for kmplot.
+
         Returns:
             bool: True if the cluster column exists. False otherwise.
         """
@@ -75,9 +78,11 @@ class Pymeans:
 
     def kmplot(self):
         """Visualize kmeans results in a scatter plot.
+
         Returns:
             matplotlib.lines.Line2D: plot showing the scatter plot of kmeans
                                      results, colored by clusters.
+
         Raises:
             InvalidInput: If self.data has zero row, less than three columns,
                           or no cluster column.
@@ -89,4 +94,5 @@ class Pymeans:
             raise InvalidInput('No cluster labels. Run fit first before plot.')
 
         fig = plt.plot(self.data.iloc[:,0], self.data.iloc[:,1], '.')
+
         return fig

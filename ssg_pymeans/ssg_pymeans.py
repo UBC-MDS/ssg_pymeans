@@ -56,7 +56,7 @@ class Pymeans:
             dataframe: Contains
                        1. new data
                        2. clustering label for each data point
-            
+        """
 
     def input_shape_validation(self):
         """Utility function checking input data shape for kmplot.
@@ -82,11 +82,10 @@ class Pymeans:
         return True
 
     def kmplot(self):
-        """Visualize kmeans results in a scatter plot.
+        """Visualize kmeans results in a scatterplot matrix.
 
         Returns:
-            matplotlib.lines.Line2D: plot showing the scatter plot of kmeans
-                                     results, colored by clusters.
+            pandas scatter_matrix: scatterplot matrix of all dimensions. Clusters indicated by color
 
         Raises:
             InvalidInput: If self.data has zero row, less than three columns,
@@ -98,6 +97,7 @@ class Pymeans:
         if not self.input_label_validation():
             raise InvalidInput('No cluster labels. Run fit first before plot.')
 
-        fig = plt.plot(self.data.iloc[:,0], self.data.iloc[:,1], '.')
+        r, c = self.data.shape
+        fig = pd.plotting.scatter_matrix(self.data.iloc[:, 0:c - 1], diagonal="box", c=self.data.iloc[:, c - 1])
 
         return fig

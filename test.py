@@ -53,12 +53,12 @@ class Test_fit:
 class Test_predict:
     @pytest.fixture
     def pymeans(self):
-    test_data = pd.DataFrame({
-        'x1': pd.Series([1,2,3]),
-        'x2': pd.Series([4,5,6]),
-        'cluster': pd.Series([1,2,3])
+        test_data = pd.DataFrame({
+            'x1': pd.Series([1,2,3]),
+            'x2': pd.Series([4,5,6]),
+            'cluster': pd.Series([1,2,3])
         })
-    return Pymeans(data=test_data)
+        return Pymeans(data=test_data)
 
     def output(self):
         pymeans = Pymeans()
@@ -101,3 +101,15 @@ class Test_kmplot:
         pymeans_test = Pymeans(data=test_data)
         with pytest.raises(InvalidInput):
             fig = pymeans_test.kmplot()
+
+class Test_kmplot_grid:
+    @pytest.fixture
+    def result(self):
+        pymeans = Pymeans()
+        return pymeans.kmplot()
+
+    def test_grid_shape(self, result):
+        assert result.shape[0] == result.shape[1]
+
+    def test_grid_col(self, result):
+        assert result.shape[1] == test_data.shape[1]-1

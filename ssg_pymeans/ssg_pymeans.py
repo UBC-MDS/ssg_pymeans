@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 from ssg_pymeans.data import default_data
 
 class InvalidInput(Exception):
@@ -33,14 +34,41 @@ class Pymeans:
 
         if method == 'random':
             # ramdomly pick initial points
-            pass
+            centroids = np.random.randint(self.data.shape[0], size=k)
+            return centroids
         elif method == 'kmpp':
             # use kmeans++ to pick initial points
             pass
         else:
             raise InvalidInput('Invalid initialization method.')
 
-    def fit(self):
+    def euc_dist(self, p1, p2):
+        """Euclidean distance between any two points"""
+        return np.linalg.norm(p1 - p2)
+
+    def should_stop(self, centroids, centroids_new, eps):
+        """Check if converged."""
+        c0 = centroids.reset_index(drop=True)
+        c1 = centroids_new.reset_index(drop=True)
+        diff = c0.subtract(c1)
+        diff = diff.abs()
+        if np.max(diff.max(axis=1).values) <= eps:
+            return True
+        return False
+
+    def tot_wss(self, data):
+        """Calculate the total within cluster sum of square error."""
+        tot_wss = 0
+        def ed(row, centroid):
+            return np.linalg.norm(row.values[0:1] - centroid.values)
+        for name, cluster in data:
+            centroid = cluster.mean()
+            centroid = centroid[['x1', 'x2']]
+            dist = cluster.apply(ed, centroid=centroid, axis=1)
+            tot_wss = tot_wss + dist.sum()
+        return tot_wss
+
+    def fit(self, K, method='random'):
         """Compute k-means clustering
         Returns:
             dictionary: Contains
@@ -48,15 +76,71 @@ class Pymeans:
                         2. total within cluster sum of square and
                         3. pandas data frame of k centroids
         """
-        pass
+        data = self.data[['x1', 'x2']]  # raw
+        nobs = data.shape[0]  # number of samples
 
-    def predict(self):
+        # get centroids
+        cent_init = self.init_cent(K, method)
+        centroids = data.iloc[cent_init, [0,1]]
+        centroids = centroids.reset_index(drop=True)
+
+        dist_mat = np.zeros((nobs, K))  # for calculation
+        labels = []
+        eps = 0
+        n_iter = 0
+        max_iter = 20
+        stop = False
+
+        while (not stop):
+            labels = []
+            for row in range(nobs):
+                for k in range(K):
+                    dist_mat[row, k] = self.euc_dist(data.iloc[row,[0,1]],
+                                                     centroids.iloc[k,[0,1]])
+                idx_min = np.argmin(dist_mat[row,])
+                labels.append(str(int(idx_min) + 1))
+
+            # group data based on labels
+            data['cluster'] = labels
+
+            centroids_new = data.groupby('cluster').mean()
+
+            if (self.should_stop(centroids, centroids_new, eps) or (n_iter > max_iter)):
+                stop = True
+
+            centroids = centroids_new
+            n_iter = n_iter + 1
+
+        print('kmeans converged in %i runs' % n_iter)
+
+        tot_withinss = self.tot_wss(data.groupby('cluster'))
+
+        res = {
+            'data': data,
+            'tot_withinss': tot_withinss,
+            'centroids': centroids
+        }
+
+        return res
+
+    def predict(self, data_new, centroids):
         """Predict k-means clustering for new data frame
         Returns:
             dataframe: Contains
                        1. new data
                        2. clustering label for each data point
         """
+        data = data_new
+        def calc_dist(row, dat): # row is centroids
+            return np.linalg.norm(row - dat)
+
+        def assign_cluster(row): # row is data here
+            dist = centroids.apply(calc_dist, dat=row, axis=1)
+            label = np.argmax(dist.values) + 1
+            return str(label)
+
+        data['cluster'] = data.apply(assign_cluster, axis=1)
+        return data
 
     def input_shape_validation(self):
         """Utility function checking input data shape for kmplot.
@@ -82,10 +166,11 @@ class Pymeans:
         return True
 
     def kmplot(self):
-        """Visualize kmeans results in a scatterplot matrix.
+        """Visualize kmeans results in a scatter plot.
 
         Returns:
-            pandas scatter_matrix: scatterplot matrix of all dimensions. Clusters indicated by color
+            matplotlib.lines.Line2D: plot showing the scatter plot of kmeans
+                                     results, colored by clusters.
 
         Raises:
             InvalidInput: If self.data has zero row, less than three columns,
@@ -97,7 +182,6 @@ class Pymeans:
         if not self.input_label_validation():
             raise InvalidInput('No cluster labels. Run fit first before plot.')
 
-        r, c = self.data.shape
-        fig = pd.plotting.scatter_matrix(self.data.iloc[:, 0:c - 1], diagonal="box", c=self.data.iloc[:, c - 1])
+        fig = plt.plot(self.data.iloc[:,0], self.data.iloc[:,1], '.')
 
         return fig

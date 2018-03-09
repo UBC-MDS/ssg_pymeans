@@ -30,25 +30,25 @@ class Test_fit:
     @pytest.fixture
     def result(self):
         pymeans = Pymeans()
-        return pymeans.fit()
+        return pymeans.fit(K=3)
 
     def test_type(self, result):
-        assert type(result) == "dictionary"
+        assert isinstance(result, dict)
 
     def test_length(self, result):
         assert len(result) == 3
 
     def test_clustering_type(self, result):
-        assert isinstance(result[clustering], pd.DataFrame)
+        assert isinstance(result['data'], pd.DataFrame)
 
     def test_wss_type(self, result):
-        assert type(result[wss]) == "float"
+        assert isinstance(result['tot_withinss'], float)
 
     def test_wss_positive(self, result):
-        assert result[wss] >= 0
+        assert result['tot_withinss'] >= 0
 
     def test_centriod_type(self, result):
-        assert isinstance(result[centroid], pd.DataFrame)
+        assert isinstance(result['centroids'], pd.DataFrame)
 
 class Test_predict:
     @pytest.fixture
@@ -56,19 +56,25 @@ class Test_predict:
         test_data = pd.DataFrame({
             'x1': pd.Series([1,2,3]),
             'x2': pd.Series([4,5,6]),
-            'cluster': pd.Series([1,2,3])
+            # 'cluster': pd.Series([1,2,3])
         })
         return Pymeans(data=test_data)
 
-    def output(self):
-        pymeans = Pymeans()
-        return pymeans.predict()
+    @pytest.fixture
+    def output(self, pymeans):
+        test_data = pd.DataFrame({
+            'x1': pd.Series([1.2,2.2,3.1]),
+            'x2': pd.Series([4.1,5.1,6]),
+            # 'cluster': pd.Series([1,2,3])
+        })
+        fit_results = pymeans.fit(K=2)
+        return pymeans.predict(test_data, fit_results['centroids'])
 
-    def test_lenght(self, output):
-        assert len(pymeans.data.rows) == len(output[:,-1])
+    def test_shape(self, pymeans, output):
+        assert pymeans.data.shape[0] == output.shape[0]
 
     def test_output_type(self, output):
-        assert max(output[:,-1])<4
+        assert np.max(output[:, output.shape[1]-1])<4
 
 class Test_kmplot:
     @pytest.fixture
@@ -101,15 +107,3 @@ class Test_kmplot:
         pymeans_test = Pymeans(data=test_data)
         with pytest.raises(InvalidInput):
             fig = pymeans_test.kmplot()
-
-class Test_kmplot_grid:
-    @pytest.fixture
-    def result(self):
-        pymeans = Pymeans()
-        return pymeans.kmplot()
-
-    def test_grid_shape(self, result):
-        assert result.shape[0] == result.shape[1]
-
-    def test_grid_col(self, result):
-        assert result.shape[1] == test_data.shape[1]-1

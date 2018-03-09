@@ -118,7 +118,7 @@ class Pymeans:
         res = {
             'data': data,
             'tot_withinss': tot_withinss,
-            'centroids': centroids
+            'centroids': pd.DataFrame(centroids)
         }
 
         return res

@@ -9,12 +9,14 @@ class InvalidInput(Exception):
 class Pymeans:
     def __init__(self, data=None):
         if (data is None):
-            self.data = default_data
+            self.data = default_data[['x1', 'x2']]
         else:
             if (isinstance(data, pd.DataFrame)):
                 self.data = data
             else:
                 raise InvalidInput('Input must be pandas data frame.')
+        self.tot_withinss = 0
+        self.centroids = None
 
     def init_cent(self, k=2, method='random'):
         """Centroids initialization using random or kmeans++ method.
@@ -34,20 +36,41 @@ class Pymeans:
 
         if method == 'random':
             # ramdomly pick initial points
-            centroids = np.random.randint(self.data.shape[0], size=k)
+            # centroids = np.random.randint(self.data.shape[0], size=k)
+            centroids = np.random.choice(self.data.shape[0], k, replace=False)
             return centroids
         elif method == 'kmpp':
             # use kmeans++ to pick initial points
+            print('kmpp not support yet. Using random instead...')
+            # centroids = np.random.randint(self.data.shape[0], size=k)
+            centroids = np.random.choice(self.data.shape[0], k, replace=False)
+            return centroids
             pass
         else:
             raise InvalidInput('Invalid initialization method.')
 
     def euc_dist(self, p1, p2):
-        """Euclidean distance between any two points"""
+        """Euclidean distance between any two points
+
+        Args:
+            p1 (array-like): coordinates (x1, x2) of the first point.
+            p2 (array-like): coordinates (x1, x2) of the second point.
+        Return:
+            float: the Euclidean distance between the two points.
+        """
         return np.linalg.norm(p1 - p2)
 
-    def should_stop(self, centroids, centroids_new, eps):
-        """Check if converged."""
+    def should_stop(self, centroids, centroids_new, eps=0):
+        """Check if kmeans converged.
+
+        Args:
+            centroids (Pandas DataFrame): previous cluster centroids.
+            centroids_new (Pandas DataFrame): new cluster centroids.
+            eps (float): tolerance
+
+        Return:
+            bool: indicates whether kmeans has converged.
+        """
         c0 = centroids.reset_index(drop=True)
         c1 = centroids_new.reset_index(drop=True)
         diff = c0.subtract(c1)
@@ -57,26 +80,45 @@ class Pymeans:
         return False
 
     def tot_wss(self, data):
-        """Calculate the total within cluster sum of square error."""
+        """Calculate the total within cluster sum of square error.
+
+        Args:
+            data (Pandas DataFrame): Clustered data grouped by cluster label.
+
+        Return:
+            float
+        """
         tot_wss = 0
         def ed(row, centroid):
             return np.linalg.norm(row.values[0:1] - centroid.values)
         for name, cluster in data:
             centroid = cluster.mean()
             centroid = centroid[['x1', 'x2']]
+            # apply the Euclidean distance function to each row of the data
             dist = cluster.apply(ed, centroid=centroid, axis=1)
             tot_wss = tot_wss + dist.sum()
         return tot_wss
 
     def fit(self, K, method='random'):
         """Compute k-means clustering
+
+        Args:
+            K (int): number of clusters.
+
         Returns:
             dictionary: Contains
                         1. pandas data frame of the attributes and clustering for each data point
                         2. total within cluster sum of square and
                         3. pandas data frame of k centroids
         """
+        if ((not isinstance(self.data, pd.DataFrame)) or
+                (not self.data.shape[1] == 2) or
+                (not self.data.shape[0] >= 1)):
+            raise InvalidInput('Input error: Input must be a data frame and \
+                have at least one row and two columns.')
+
         data = self.data[['x1', 'x2']]  # raw
+        self.data = data
         nobs = data.shape[0]  # number of samples
 
         # get centroids
@@ -88,7 +130,7 @@ class Pymeans:
         labels = []
         eps = 0
         n_iter = 0
-        max_iter = 20
+        max_iter = 100
         stop = False
 
         while (not stop):
@@ -115,6 +157,11 @@ class Pymeans:
 
         tot_withinss = self.tot_wss(data.groupby('cluster'))
 
+        # save to class attributes
+        self.data = data
+        self.tot_withinss = tot_withinss
+        self.centroids = centroids
+
         res = {
             'data': data,
             'tot_withinss': tot_withinss,
@@ -130,6 +177,18 @@ class Pymeans:
                        1. new data
                        2. clustering label for each data point
         """
+        if ((not isinstance(data_new, pd.DataFrame)) or
+                (not data_new.shape[1] == 2) or
+                (not data_new.shape[0] >= 1)):
+            raise InvalidInput('Input error: Input must be a data frame and \
+                have at least one row and two columns.')
+
+        if ((not isinstance(centroids, pd.DataFrame)) or
+                (not data_new.shape[1] == 2) or
+                (not data_new.shape[0] >= 1)):
+            raise InvalidInput('Input error: centroids must be a data frame and \
+                have at least one row and two columns.')
+
         data = data_new
         def calc_dist(row, dat): # row is centroids
             return np.linalg.norm(row - dat)
@@ -142,46 +201,75 @@ class Pymeans:
         data['cluster'] = data.apply(assign_cluster, axis=1)
         return data
 
-    def input_shape_validation(self):
+    def input_shape_validation(self, data_to_valid=None):
         """Utility function checking input data shape for kmplot.
+
+        Args:
+            data_to_valid (DataFrame): Data to be validated.
 
         Returns
             bool: True if shape is valid. False otherwise.
         """
-        if (not self.data.shape or
-                len(self.data.shape) <= 1 or
-                self.data.shape[0] <= 0 or
-                self.data.shape[1] < 3):
+        if data_to_valid is None:
+            data = self.data
+        else:
+            data = data_to_valid
+
+        if (not data.shape or
+                len(data.shape) <= 1 or
+                data.shape[0] <= 0 or
+                data.shape[1] < 3):
             return False
         return True
 
-    def input_label_validation(self):
+    def input_label_validation(self, data_to_valid=None):
         """Utility function checking if the cluster column exists for kmplot.
+
+        Args:
+            data_to_valid (DataFrame): Data to be validated.
 
         Returns:
             bool: True if the cluster column exists. False otherwise.
         """
-        if (not 'cluster' in self.data.columns):
+        if data_to_valid is None:
+            data = self.data
+        else:
+            data = data_to_valid
+
+        if (not 'cluster' in data.columns):
             return False
         return True
 
-    def kmplot(self):
+    def kmplot(self, pred_data=None):
         """Visualize kmeans results in a scatter plot.
 
+        Args:
+            pred_data (DataFrame): prediction data with cluster labels.
+
         Returns:
-            matplotlib.lines.Line2D: plot showing the scatter plot of kmeans
+            matplotlib figure: plot showing the scatter plot of kmeans
                                      results, colored by clusters.
+            matplotlib axes: figure details.
 
         Raises:
             InvalidInput: If self.data has zero row, less than three columns,
                           or no cluster column.
         """
-        if not self.input_shape_validation():
+        if pred_data is None:
+            data = self.data
+        else:
+            data = pred_data
+
+        if not self.input_shape_validation(data):
             raise InvalidInput('Input must have at least one row and \
                 three columns.')
-        if not self.input_label_validation():
+        if not self.input_label_validation(data):
             raise InvalidInput('No cluster labels. Run fit first before plot.')
 
-        fig = plt.plot(self.data.iloc[:,0], self.data.iloc[:,1], '.')
+        clusters = data.groupby('cluster')
+        fig, ax = plt.subplots()
+        for name, cluster in clusters:
+            ax.plot(cluster.x1, cluster.x2, marker='.', linestyle='', label=cluster)
+        # fig = plt.plot(data.iloc[:,0], data.iloc[:,1], '.')
 
-        return fig
+        return fig, ax

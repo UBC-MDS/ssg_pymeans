@@ -2,7 +2,7 @@
 ssg_pymeans
 ===========
 
-ssg_pymeans implements kmeans. It is not a wrapper around other kmeans packages.
+ssg_pymeans implements kmeans for two-dimensional datasets. It is not a wrapper around other kmeans packages.
 
 ssg_pymeans provides options for different initial centroid
 selections, including random and kmeans++. You might find the package useful
@@ -13,10 +13,10 @@ on top this basic kmeans implementation. Typical usage often looks like this:
 
     from ssg_pymeans import Pymeans
 
-    kmeans_job = Pymeans()
-    kmeans_job.init_cent('kmpp')
-    kmeans_job.kmeans()
-    kmeans_job.kmplot()
+    pymeans = Pymeans(my_data_frame)
+    model = pymeans.fit(k = 3, method = "random")
+    results = pymenas.predict(new_data  = new_data_frame, centroids = model['centroids'])
+    pymenas.kmplot(results)
 
 Home Page
 =========
@@ -26,33 +26,18 @@ https://github.com/UBC-MDS/ssg_pymeans
 Dependencies
 ============
 
-ssg_pymeans requires matlplotlib and numpy.
+ssg_pymeans requires matlplotlib, pandas and numpy.
 
 Functions
 =========
 
-* init_cent: initial points selection
-* kmeans: build clusters
+* fit: build clusters
 * predict: predict the label of new data based on the cluster attributes
 * kmplot: visualize the results and performance
 
-The package will include one or two common datasets for testing and
-demonstration.
+The package includes two datasets for testing and demonstration.
 
-Some utility functions include:
-
-* input_validation: check for input validity, e.g. whether the dimensions of
-  X match with the label vector (if provided by user)
-* input scaling: scale/normalize the input data if necessary
-
-Optional functions on the roadmap:
-
-* EM clustering
-* Multi-dimensional scaling
-* Transductive/inductive SSL
-
-Outputs related to performance will be denoted by class attributes, e.g. within
-cluster sum of squared distance.
+Outputs related to performance (within cluster sum of squared distance) is part of the output from clustering.
 
 Ecosystem
 =========

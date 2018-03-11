@@ -2,7 +2,7 @@
 
 A Python package for k-means clustering.
 
-## Contributors:
+## Contributors
 
 Sophia Wang, Susan Fung, Guanchen Zhang
 
@@ -10,13 +10,11 @@ Sophia Wang, Susan Fung, Guanchen Zhang
 
 This is the repository for the Python version of the `ssg_pymeans` package. The R version is available [here](https://github.com/UBC-MDS/ssg_kmeansr).
 
-This package implements the classical unsupervised clustering method, [k-means](https://en.wikipedia.org/wiki/K-means_clustering), with options for choosing the initial centroids (e.g. random and kmeans++). Users will be able to find clusters in their data, label new data, and observe the clustering results.
-
-Depending on the progress and time constraint, we also plan to cover some other clustering methods in this package. See details in the section below.
+This package implements the classical unsupervised clustering method, [k-means](https://en.wikipedia.org/wiki/K-means_clustering) for two-dimensional datasets, with options for choosing the initial centroids (e.g. random and kmeans++). Users will be able to find clusters in their data, label new data, and observe the clustering results.
 
 ## Functions
 
-The package will be implemented in an OOP fashion with the following class functions:
+The package implements in an OOP fashion the following class functions:
 
 - initial points selection:
   -  basic k-means: initial centroids are picked randomly.
@@ -25,20 +23,23 @@ The package will be implemented in an OOP fashion with the following class funct
 - prediction: predict the label of new data based on the cluster attributes
 - plotting: the package will provide plotting functions to visualize the results and performance
 
-Outputs related to performance will be denoted by class attributes, e.g. within cluster sum of squared distance.
+Outputs related to performance (within cluster sum of squared distance) is part of the output from clustering.
 
-The package will include one or two common datasets for testing and demonstration.
+The package includes two datasets for testing and demonstration.
 
-Some miscellaneous functions include:
+## Examples
+```
+pymeans = Pymeans(my_data_frame)
+model = pymeans.fit(k = 3, method = "random")
+results = pymenas.predict(new_data  = new_data_frame, centroids = model['centroids'])
+pymenas.kmplot(results)
+```
 
-- input validation: check for input validity, e.g. whether the dimensions of X match with the label vector (if provided by user).
-- input scaling: scale/normalize the input data if necessary
+## Installing the Package
 
-Optional functions depending on the progress:
+Run the following in your command line:
 
-- EM clustering
-- Multi-dimensional scaling
-- Transductive/inductive SSL
+`pip install git+https://github.com/UBC-MDS/ssg_pymeans.git`
 
 ## Ecosystem
 

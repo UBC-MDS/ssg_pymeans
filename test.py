@@ -33,39 +33,48 @@ class Test_fit:
         return pymeans.fit(K=3)
 
     def test_type(self, result):
+        # test if the output from fit() is a dictionary
         assert isinstance(result, dict)
 
     def test_length(self, result):
+        # test if the output has length = 3
         assert len(result) == 3
 
     def test_clustering_type(self, result):
+        # test if the first component(data with cluster label) of the dictionary is a data frame
         assert isinstance(result['data'], pd.DataFrame)
 
     def test_wss_type(self, result):
+        # test if the second component of the dictionary (total within cluster sum of square) is float
         assert isinstance(result['tot_withinss'], float)
 
     def test_wss_positive(self, result):
+        # test if the second component of the dictionary is larger than 0
         assert result['tot_withinss'] >= 0
 
     def test_centriod_type(self, result):
+        # test if the third component (centroids) of the dictionary is float
         assert isinstance(result['centroids'], pd.DataFrame)
 
 class Test_predict:
     @pytest.fixture
-    def pymeans(self):
+    def output(self):
+        pymeans = Pymeans()
         test_data = pd.DataFrame({
-            'x1': pd.Series([1,2,3]),
-            'x2': pd.Series([4,5,6]),
-            # 'cluster': pd.Series([1,2,3])
+            'x1': pd.Series([1, 2, 3]),
+            'x2': pd.Series([4, 5, 6])
         })
-        return Pymeans(data=test_data)
+        test_centroids = pd.DataFrame({
+            'x1': pd.Series([1.2,2.2]),
+            'x2': pd.Series([4.1,5.1])
+        })
+        return pymeans.predict(test_data, test_centroids)
 
-    @pytest.fixture
-    def output(self, pymeans):
+    def test_output_shape(self, output):
+        # test if the number of row in predict is the same as the number of row in input data
         test_data = pd.DataFrame({
-            'x1': pd.Series([1.2,2.2,3.1]),
-            'x2': pd.Series([4.1,5.1,6]),
-            # 'cluster': pd.Series([1,2,3])
+            'x1': pd.Series([1, 2, 3]),
+            'x2': pd.Series([4, 5, 6])
         })
         fit_results = pymeans.fit(K=3)
         return pymeans.predict(test_data, fit_results['centroids'])

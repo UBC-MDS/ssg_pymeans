@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='ssg_pymeans',
-    version='1.0',
+    version='3.0',
     author='Sophia Wang, Susan Fung, Guanchen Zhang',
     packages=['ssg_pymeans'],
     url='https://github.com/UBC-MDS/ssg_pymeans',

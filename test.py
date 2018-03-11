@@ -76,32 +76,38 @@ class Test_predict:
             'x1': pd.Series([1, 2, 3]),
             'x2': pd.Series([4, 5, 6])
         })
-        assert test_data.shape[0] == output.shape[0]
+        fit_results = pymeans.fit(K=3)
+        return pymeans.predict(test_data, fit_results['centroids'])
+
+    def test_shape(self, pymeans, output):
+        assert pymeans.data.shape[0] == output.shape[0]
 
     def test_output_type(self, output):
-        # test if the number of clusters in output is the same as in centroids
-        test_centroids = pd.DataFrame({
-            'x1': pd.Series([1.2,2.2]),
-            'x2': pd.Series([4.1,5.1])
-        })
-        assert test_centroids.shape[0] == int(np.max(output.iloc[:, output.shape[1]-1]))
+        assert np.max(pd.to_numeric(output['cluster'])) < 4
 
 class Test_kmplot:
     @pytest.fixture
-    def pymeans(self):
-        test_data = pd.DataFrame({
+    def test_data(self):
+        return pd.DataFrame({
             'x1': pd.Series([1,2,3]),
             'x2': pd.Series([4,5,6]),
             'cluster': pd.Series([1,2,3])
         })
+
+    @pytest.fixture
+    def pymeans(self, test_data):
         return Pymeans(data=test_data)
 
-    def test_kmplot(self, pymeans):
-        lines = pymeans.kmplot()
-        x_plot, y_plot = lines[0].get_data()
+    def test_kmplot(self, pymeans, test_data):
+        fig, ax = pymeans.kmplot(test_data)
+        x_plot1, y_plot1 = ax.lines[0].get_data()
+        x_plot2, y_plot2 = ax.lines[1].get_data()
+        x_plot3, y_plot3 = ax.lines[2].get_data()
+        x_plot = np.concatenate((x_plot1, x_plot2, x_plot3))
+        y_plot = np.concatenate((y_plot1, y_plot2, y_plot3))
         # check if data in the plot match the input data
-        np.testing.assert_array_equal(x_plot, pymeans.data.iloc[:,0].values)
-        np.testing.assert_array_equal(y_plot, pymeans.data.iloc[:,1].values)
+        np.testing.assert_array_equal(np.sort(x_plot), np.sort(pymeans.data['x1'].values))
+        np.testing.assert_array_equal(np.sort(y_plot), np.sort(pymeans.data['x2'].values))
 
     @pytest.mark.parametrize("test_data", [
         pd.DataFrame({

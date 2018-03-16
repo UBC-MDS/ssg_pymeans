@@ -70,17 +70,13 @@ class Test_predict:
         })
         return pymeans.predict(test_data, test_centroids)
 
-    def test_output_shape(self, output):
-        # test if the number of row in predict is the same as the number of row in input data
+    def test_shape(self, output):
+        # test if the output has the same row as new data
         test_data = pd.DataFrame({
             'x1': pd.Series([1, 2, 3]),
             'x2': pd.Series([4, 5, 6])
         })
-        fit_results = pymeans.fit(K=3)
-        return pymeans.predict(test_data, fit_results['centroids'])
-
-    def test_shape(self, pymeans, output):
-        assert pymeans.data.shape[0] == output.shape[0]
+        assert test_data.shape[0] == output.shape[0]
 
     def test_output_type(self, output):
         assert np.max(pd.to_numeric(output['cluster'])) < 4

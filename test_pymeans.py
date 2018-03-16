@@ -83,27 +83,31 @@ class Test_predict:
 
 class Test_kmplot:
     @pytest.fixture
-    def test_data(self):
-        return pd.DataFrame({
-            'x1': pd.Series([1,2,3]),
-            'x2': pd.Series([4,5,6]),
-            'cluster': pd.Series([1,2,3])
-        })
+    def output(self):
+        pymeans = Pymeans()
+        test_data = pd.DataFrame({
+                'x1': pd.Series([1,2,3]),
+                'x2': pd.Series([4,5,6]),
+                'cluster': pd.Series([1,2,3])
+            })
+        return pymeans.kmplot(pred_data=test_data)
 
-    @pytest.fixture
-    def pymeans(self, test_data):
-        return Pymeans(data=test_data)
-
-    def test_kmplot(self, pymeans, test_data):
-        fig, ax = pymeans.kmplot(test_data)
+    def test_kmplot(self, output):
+        test_data = pd.DataFrame({
+                'x1': pd.Series([1,2,3]),
+                'x2': pd.Series([4,5,6]),
+                'cluster': pd.Series([1,2,3])
+            })
+        fig = output[0]
+        ax = output[1]
         x_plot1, y_plot1 = ax.lines[0].get_data()
         x_plot2, y_plot2 = ax.lines[1].get_data()
         x_plot3, y_plot3 = ax.lines[2].get_data()
         x_plot = np.concatenate((x_plot1, x_plot2, x_plot3))
         y_plot = np.concatenate((y_plot1, y_plot2, y_plot3))
         # check if data in the plot match the input data
-        np.testing.assert_array_equal(np.sort(x_plot), np.sort(pymeans.data['x1'].values))
-        np.testing.assert_array_equal(np.sort(y_plot), np.sort(pymeans.data['x2'].values))
+        np.testing.assert_array_equal(np.sort(x_plot), np.sort(test_data['x1'].values))
+        np.testing.assert_array_equal(np.sort(y_plot), np.sort(test_data['x2'].values))
 
     @pytest.mark.parametrize("test_data", [
         pd.DataFrame({

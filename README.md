@@ -38,25 +38,26 @@ Run the following in your command line:
 ## Examples
 ```
 from ssg_pymeans import Pymeans
+import pandas as pd
 
-pymeans = Pymeans() # load the default data that come with the package
+# sample toy data sets, you can find a bigger sample data set in the data folder
+train_data = pd.DataFrame({
+    'x1': pd.Series([1, 2, 3]),
+    'x2': pd.Series([4, 5, 6])
+})
+
+test_data = pd.DataFrame({
+    'x1': pd.Series([1, 2, 3]),
+    'x2': pd.Series([4, 5, 6])
+})
 
 # Alternatively, load your own data
-# you can find a sample dataset in the data folder
+pymeans = Pymeans(data = train_data)
 
-# train_data = pd.read_csv('./data/sample_train.csv')
-# train_data = train_data[['x1', 'x2']]
-# pymeans = Pymeans(data = train_data)
-
+# Train the model
 model = pymeans.fit(K=3) # three clusters
 
-# model has three attributes: data, centroids, tot_withinss
-model['centroids'] # see centroids
-
-pymeans.kmplot() # plot training results
-
-## prediction
-test_data = pd.read_csv('./data/sample_test.csv') # see the data folder
+# Make prediction on new data set
 pred_results = pymeans.predict(test_data, model['centroids'])
 pymeans.kmplot(pred_results)
 ```

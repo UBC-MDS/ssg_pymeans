@@ -29,19 +29,37 @@ Outputs related to performance (within cluster sum of squared distance) is part 
 
 The package includes two datasets for testing and demonstration.
 
-## Examples
-```
-pymeans = Pymeans(my_data_frame)
-model = pymeans.fit(k = 3, method = "random")
-results = pymenas.predict(new_data  = new_data_frame, centroids = model['centroids'])
-pymenas.kmplot(results)
-```
-
 ## Installing the Package
 
 Run the following in your command line:
 
 `pip install git+https://github.com/UBC-MDS/ssg_pymeans.git`
+
+## Examples
+```
+from ssg_pymeans import Pymeans
+
+pymeans = Pymeans() # load the default data that come with the package
+
+# Alternatively, load your own data
+# you can find a sample dataset in the data folder
+
+# train_data = pd.read_csv('./data/sample_train.csv')
+# train_data = train_data[['x1', 'x2']]
+# pymeans = Pymeans(data = train_data)
+
+model = pymeans.fit(K=3) # three clusters
+
+# model has three attributes: data, centroids, tot_withinss
+model['centroids'] # see centroids
+
+pymeans.kmplot() # plot training results
+
+## prediction
+test_data = pd.read_csv('./data/sample_test.csv') # see the data folder
+pred_results = pymeans.predict(test_data, model['centroids'])
+pymeans.kmplot(pred_results)
+```
 
 ## Ecosystem
 

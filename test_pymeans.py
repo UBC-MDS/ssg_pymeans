@@ -79,6 +79,7 @@ class Test_predict:
         assert test_data.shape[0] == output.shape[0]
 
     def test_output_type(self, output):
+        # test if output has less than 4 clusters
         assert np.max(pd.to_numeric(output['cluster'])) < 4
 
 class Test_kmplot:

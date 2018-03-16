@@ -110,17 +110,11 @@ class Test_kmplot:
         np.testing.assert_array_equal(np.sort(x_plot), np.sort(test_data['x1'].values))
         np.testing.assert_array_equal(np.sort(y_plot), np.sort(test_data['x2'].values))
 
-    @pytest.mark.parametrize("test_data", [
-        pd.DataFrame({
-            'x1': pd.Series([]),
-            'x2': pd.Series([])
-        }),
-        pd.DataFrame({
-            'x1': pd.Series([1,2,3]),
-            'x2': pd.Series([4,5,6])
-        })
-    ])
-    def test_kmplot_input(self, test_data):
+    def test_kmplot_input(self):
+        test_data = pd.DataFrame({
+                'x1': pd.Series([1,2,3]),
+                'x2': pd.Series([4,5,6])
+            })
         pymeans_test = Pymeans(data=test_data)
         with pytest.raises(InvalidInput):
             fig = pymeans_test.kmplot()

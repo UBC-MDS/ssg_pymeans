@@ -15,11 +15,20 @@ class Pymeans:
             self.data = default_data[['x1', 'x2']]
         else:
             if (isinstance(data, pd.DataFrame)):
-                self.data = data
+                if ((not data.shape[1] == 2) or
+                        (data.shape[0] < 1)):
+                    raise InvalidInput('Input error: Input must be a data frame and \
+                        have at least one row and two columns.')
+                else:
+                    try:
+                        self.data = data
+                        self.data.columns = ['x1', 'x2']
+                    except:
+                        print('Failed to convert column names')
             else:
                 raise InvalidInput('Input must be pandas data frame.')
-        self.tot_withinss = 0
-        self.centroids = None
+        self.tot_withinss = 0  # total within cluster sum of squared error
+        self.centroids = None  # coordinates of cluster centroids
 
     def init_cent(self, k=2, method='random'):
         """Centroids initialization using random or kmeans++ method.
@@ -61,7 +70,11 @@ class Pymeans:
         Return:
             float: the Euclidean distance between the two points.
         """
-        return np.linalg.norm(p1 - p2)
+        try:
+            dist = np.linalg.norm(p1 - p2)
+            return dist
+        except:
+            print('Error in calculating the Euclidean distance.')
 
     def should_stop(self, centroids, centroids_new, eps=0):
         """Check if kmeans converged.
@@ -78,6 +91,7 @@ class Pymeans:
         c1 = centroids_new.reset_index(drop=True)
         diff = c0.subtract(c1)
         diff = diff.abs()
+        # check the difference between old and new centroids
         if np.max(diff.max(axis=1).values) <= eps:
             return True
         return False
@@ -97,9 +111,10 @@ class Pymeans:
         for name, cluster in data:
             centroid = cluster.mean()
             centroid = centroid[['x1', 'x2']]
-            # apply the Euclidean distance function to each row of the data
+            # apply the Euclidean distance function to each row of the data in the cluster
             dist = cluster.apply(ed, centroid=centroid, axis=1)
             tot_wss = tot_wss + dist.sum()
+        assert tot_wss >= 0, 'Error in tot_wss. tot_wss cannot be less than 0'
         return tot_wss
 
     def fit(self, K, method='random'):
@@ -124,7 +139,7 @@ class Pymeans:
         self.data = data
         nobs = data.shape[0]  # number of samples
 
-        # get centroids
+        # get initial centroids
         cent_init = self.init_cent(K, method)
         centroids = data.iloc[cent_init, [0,1]]
         centroids = centroids.reset_index(drop=True)
@@ -140,16 +155,20 @@ class Pymeans:
             labels = []
             for row in range(nobs):
                 for k in range(K):
+                    # each column in dist_mat represents the distance from a
+                    # point to the centroid of its cluster
                     dist_mat[row, k] = self.euc_dist(data.iloc[row,[0,1]],
                                                      centroids.iloc[k,[0,1]])
                 idx_min = np.argmin(dist_mat[row,])
-                labels.append(str(int(idx_min) + 1))
+                labels.append(str(int(idx_min) + 1))  # labels are string
 
             # group data based on labels
             data['cluster'] = labels
 
+            # new centroids in the iteration
             centroids_new = data.groupby('cluster').mean()
 
+            # stop if new centroids = old centroids or exceeds max iteration (100)
             if (self.should_stop(centroids, centroids_new, eps) or (n_iter > max_iter)):
                 stop = True
 
@@ -180,6 +199,7 @@ class Pymeans:
                        1. new data
                        2. clustering label for each data point
         """
+        # Check inputs
         if ((not isinstance(data_new, pd.DataFrame)) or
                 (not data_new.shape[1] == 2) or
                 (not data_new.shape[0] >= 1)):
@@ -197,10 +217,13 @@ class Pymeans:
             return np.linalg.norm(row - dat)
 
         def assign_cluster(row): # row is data here
+            # distance from a point to all the centroids
             dist = centroids.apply(calc_dist, dat=row, axis=1)
-            label = np.argmax(dist.values) + 1
+            # cluster label is the index of the centroid closest to the point
+            label = np.argmin(dist.values) + 1
             return str(label)
 
+        # iterate over each data point, i.e. row in data
         data['cluster'] = data.apply(assign_cluster, axis=1)
         return data
 
@@ -213,6 +236,7 @@ class Pymeans:
         Returns
             bool: True if shape is valid. False otherwise.
         """
+        # if data_to_valid not provided, use self.data instead
         if data_to_valid is None:
             data = self.data
         else:
@@ -234,6 +258,7 @@ class Pymeans:
         Returns:
             bool: True if the cluster column exists. False otherwise.
         """
+        # if data_to_valid not provided, use self.data instead
         if data_to_valid is None:
             data = self.data
         else:
@@ -258,6 +283,9 @@ class Pymeans:
             InvalidInput: If self.data has zero row, less than three columns,
                           or no cluster column.
         """
+        # if pred_data not provided, use self.data instead, and in this case,
+        # kmplot will plot the training results. If pred_data is provided,
+        # it will plot the prediction results
         if pred_data is None:
             data = self.data
         else:
@@ -274,5 +302,7 @@ class Pymeans:
         for name, cluster in clusters:
             ax.plot(cluster.x1, cluster.x2, marker='.', linestyle='', label=cluster)
         # fig = plt.plot(data.iloc[:,0], data.iloc[:,1], '.')
+        plt.xlabel('x1')
+        plt.ylabel('x2')
 
         return fig, ax

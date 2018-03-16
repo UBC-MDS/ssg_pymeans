@@ -13,7 +13,7 @@ class InvalidInput(Exception):
 class Pymeans:
     def __init__(self, data=None):
         if (data is None):
-            filename = pkg_resources.resource_filename(__name__, "sample_train.csv")
+            filename = pkg_resources.resource_filename(__name__, "data/sample_train.csv")
             default_data = pd.read_csv(filename)
             self.data = default_data[['x1', 'x2']]
         else:

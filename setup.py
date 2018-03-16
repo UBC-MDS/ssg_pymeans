@@ -8,5 +8,9 @@ setup(
     url='https://github.com/UBC-MDS/ssg_pymeans',
     description='A Python package for k-means clustering',
     long_description=open('README.txt').read(),
-    install_requires=['numpy', 'pandas', 'matplotlib']
+    install_requires=['numpy', 'pandas', 'matplotlib'],
+    include_package_data=True,
+    package_data={
+        'ssg_pymeans': ['data/*.csv'],
+    }
 )

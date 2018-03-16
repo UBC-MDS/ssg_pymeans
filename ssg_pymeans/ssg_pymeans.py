@@ -4,7 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 import numpy as np
-from ssg_pymeans.data import default_data
+# from ssg_pymeans.data import default_data
+import pkg_resources
 
 class InvalidInput(Exception):
     pass
@@ -12,6 +13,8 @@ class InvalidInput(Exception):
 class Pymeans:
     def __init__(self, data=None):
         if (data is None):
+            filename = pkg_resources.resource_filename(__name__, "sample_train.csv")
+            default_data = pd.read_csv(filename)
             self.data = default_data[['x1', 'x2']]
         else:
             if (isinstance(data, pd.DataFrame)):

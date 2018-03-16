@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/UBC-MDS/ssg_pymeans.svg?branch=master)](https://travis-ci.org/UBC-MDS/ssg_pymeans)
+
 # ssg_pymeans
 
 A Python package for k-means clustering.

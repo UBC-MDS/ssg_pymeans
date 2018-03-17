@@ -20,7 +20,7 @@ The package implements in an OOP fashion the following class functions:
 
 - initial points selection:
   -  basic k-means: initial centroids are picked randomly.
-  -  k-means++: initial centroids are picked based on distance. More details can be found [here](https://en.wikipedia.org/wiki/K-means%2B%2B).
+  -  k-means++: initial centroids are picked based on distance. More details can be found [here](https://en.wikipedia.org/wiki/K-means%2B%2B). (Note: this feature is not yet implemented.)
 - clustering: build clusters and save cluster attributes
 - prediction: predict the label of new data based on the cluster attributes
 - plotting: the package will provide plotting functions to visualize the results and performance
@@ -36,7 +36,8 @@ Run the following in your command line:
 `pip install git+https://github.com/UBC-MDS/ssg_pymeans.git`
 
 ## Examples
-```
+
+```python
 from ssg_pymeans import Pymeans
 import pandas as pd
 
@@ -51,11 +52,16 @@ test_data = pd.DataFrame({
     'x2': pd.Series([4, 5, 6])
 })
 
+# Load the included data in the package
+pymeans = Pymeans()
 # Alternatively, load your own data
-pymeans = Pymeans(data = train_data)
+# pymeans = Pymeans(data = train_data)
 
 # Train the model
 model = pymeans.fit(K=3) # three clusters
+
+# See the training results
+pymeans.kmplot()
 
 # Make prediction on new data set
 pred_results = pymeans.predict(test_data, model['centroids'])
